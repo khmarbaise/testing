@@ -19,44 +19,34 @@ package com.soebes.plugins.testing;
  * under the License.
  */
 
-import com.soebes.itf.jupiter.extension.MavenJupiterExtension;
 import com.soebes.itf.jupiter.extension.MavenTest;
 import com.soebes.itf.jupiter.maven.MavenExecutionResult;
 import com.soebes.itf.jupiter.maven.MavenProjectResult;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.TestInfo;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 
 import static com.soebes.itf.extension.assertj.MavenExecutionResultAssert.assertThat;
 
-@MavenJupiterExtension
-class MavenPluginIT {
+@PluginTesting
+class MavenJavaDocPluginIT {
 
   @BeforeEach
-  void beforeEach(TestInfo testInfo, MavenProjectResult result) throws GitAPIException, IOException {
-    String methodName = testInfo.getTestMethod()
-        .orElseThrow(IllegalArgumentException::new)
-        .getName();
-    File targetProjectDirectory = result.getTargetProjectDirectory();
+  void beforeEach(MavenProjectResult result) throws GitAPIException, IOException {
+    Files.deleteIfExists(Paths.get(result.getTargetProjectDirectory().toPath().toString(), "pom.xml"));
+    Files.deleteIfExists(Paths.get(result.getTargetProjectDirectory().toPath().toString(), ".gitignore"));
 
-    Path path = Paths.get(targetProjectDirectory.getAbsolutePath());
-
-    Files.deleteIfExists(Paths.get(path.toString(), "pom.xml"));
-    Files.deleteIfExists(Paths.get(path.toString(), ".gitignore"));
-
-    System.out.println("destination = " + path.toFile());
+    System.out.println("destination = " + result.getTargetProjectDirectory().toPath());
 
     try (var cloneRepository = Git
         .cloneRepository()
-        .setDirectory(path.toFile())
+        .setDirectory(result.getTargetProjectDirectory())
         .setURI("https://github.com/apache/maven-javadoc-plugin.git")
+//        .setBranch("mvn4")
         .call()) {
       System.out.println("cloneRepository = " + cloneRepository);
     }

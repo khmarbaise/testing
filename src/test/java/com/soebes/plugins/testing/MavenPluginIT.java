@@ -19,9 +19,7 @@ package com.soebes.plugins.testing;
  * under the License.
  */
 
-import com.soebes.itf.jupiter.extension.MavenGoal;
 import com.soebes.itf.jupiter.extension.MavenJupiterExtension;
-import com.soebes.itf.jupiter.extension.MavenProfile;
 import com.soebes.itf.jupiter.extension.MavenTest;
 import com.soebes.itf.jupiter.maven.MavenExecutionResult;
 import com.soebes.itf.jupiter.maven.MavenProjectResult;
@@ -31,7 +29,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.TestInfo;
 
 import java.io.File;
-import java.net.URISyntaxException;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
@@ -41,29 +40,29 @@ import static com.soebes.itf.extension.assertj.MavenExecutionResultAssert.assert
 class MavenPluginIT {
 
   @BeforeEach
-  void beforeEach(TestInfo testInfo, MavenProjectResult result) throws GitAPIException, URISyntaxException {
+  void beforeEach(TestInfo testInfo, MavenProjectResult result) throws GitAPIException, IOException {
     String methodName = testInfo.getTestMethod()
         .orElseThrow(IllegalArgumentException::new)
         .getName();
     File targetProjectDirectory = result.getTargetProjectDirectory();
 
     Path path = Paths.get(targetProjectDirectory.getAbsolutePath());
-    File targetProjectBaseDirectory = path.getParent().toFile();
 
-    //Create a directory based on the method name.
-    File remoteRepo = new File(targetProjectBaseDirectory, methodName + ".git" );
-    remoteRepo.mkdir();
+    Files.deleteIfExists(Paths.get(path.toString(), "pom.xml"));
+    Files.deleteIfExists(Paths.get(path.toString(), ".gitignore"));
 
-    var cloneRepository = Git
+    System.out.println("destination = " + path.toFile());
+
+    try (var cloneRepository = Git
         .cloneRepository()
-        .setDirectory(remoteRepo)
+        .setDirectory(path.toFile())
         .setURI("https://github.com/apache/maven-javadoc-plugin.git")
-        .call();
+        .call()) {
+      System.out.println("cloneRepository = " + cloneRepository);
+    }
   }
 
   @MavenTest
-  @MavenGoal("verify")
-  @MavenProfile("run-its")
   void maven_javadoc_plugin(MavenExecutionResult result) {
     assertThat(result).isSuccessful();
   }

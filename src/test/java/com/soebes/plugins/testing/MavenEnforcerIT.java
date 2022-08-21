@@ -21,38 +21,14 @@ package com.soebes.plugins.testing;
 
 import com.soebes.itf.jupiter.extension.MavenTest;
 import com.soebes.itf.jupiter.maven.MavenExecutionResult;
-import com.soebes.itf.jupiter.maven.MavenProjectResult;
-import org.eclipse.jgit.api.Git;
-import org.eclipse.jgit.api.errors.GitAPIException;
-import org.junit.jupiter.api.BeforeEach;
-
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 
 import static com.soebes.itf.extension.assertj.MavenExecutionResultAssert.assertThat;
 
 @PluginTesting
-class MavenEnforcerIT {
-
-  @BeforeEach
-  void beforeEach(MavenProjectResult result) throws GitAPIException, IOException {
-    Files.deleteIfExists(Paths.get(result.getTargetProjectDirectory().toPath().toString(), "pom.xml"));
-    Files.deleteIfExists(Paths.get(result.getTargetProjectDirectory().toPath().toString(), ".gitignore"));
-
-    System.out.println("destination = " + result.getTargetProjectDirectory().toPath());
-
-    try (var cloneRepository = Git
-        .cloneRepository()
-        .setDirectory(result.getTargetProjectDirectory())
-        .setURI("https://github.com/apache/maven-enforcer.git")
-//        .setBranch("mvn4")
-        .call()) {
-      System.out.println("cloneRepository = " + cloneRepository);
-    }
-  }
+class MavenEnforcerIT extends BaseIntegration {
 
   @MavenTest
+  @GitRepo("maven-enforcer")
   void maven_enforcer(MavenExecutionResult result) {
     assertThat(result).isSuccessful();
   }

@@ -6,6 +6,7 @@ import com.soebes.itf.jupiter.maven.MavenExecutionResult;
 import static com.soebes.itf.extension.assertj.MavenExecutionResultAssert.assertThat;
 
 @PluginTesting
+//@GitBranch("mvn4")
 class PluginIT extends BaseIntegration {
 
   @MavenTest

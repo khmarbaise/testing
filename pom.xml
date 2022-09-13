@@ -63,7 +63,7 @@
     -->
     <trimStackTrace>false</trimStackTrace>
     <maven.plugin.tools>3.6.4</maven.plugin.tools>
-    <itf.version>0.11.0</itf.version>
+    <itf.version>0.12.0-SNAPSHOT</itf.version>
   </properties>
 
   <dependencyManagement>
@@ -169,7 +169,6 @@
           <!--          <forkCount>5</forkCount>-->
           <reuseForks>true</reuseForks>
           <systemProperties>
-            <maven.version>${maven.version}</maven.version>
             <maven.home>${maven.home}</maven.home>
           </systemProperties>
         </configuration>

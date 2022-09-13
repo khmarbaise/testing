@@ -7,8 +7,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.TestInfo;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.Arrays;
 
 class BaseIntegration {
@@ -31,12 +29,9 @@ class BaseIntegration {
     String gitRepo = repositoryBase + "/" + repo + ".git";
     System.out.println("gitRepo = " + gitRepo);
 
-    Files.deleteIfExists(Paths.get(result.getTargetProjectDirectory().toPath().toString(), "pom.xml"));
-    Files.deleteIfExists(Paths.get(result.getTargetProjectDirectory().toPath().toString(), ".gitignore"));
-
     try (var cloneRepository = Git
         .cloneRepository()
-        .setDirectory(result.getTargetProjectDirectory())
+        .setDirectory(result.getTargetProjectDirectory().toFile())
         .setURI(gitRepo)
 //        .setBranch("mvn4")
         .call()) {

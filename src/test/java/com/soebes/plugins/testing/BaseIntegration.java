@@ -6,13 +6,12 @@ import org.eclipse.jgit.api.errors.GitAPIException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.TestInfo;
 
-import java.io.IOException;
 import java.util.Arrays;
 
 class BaseIntegration {
 
   @BeforeEach
-  void beforeEach(TestInfo testInfo, MavenProjectResult result) throws GitAPIException, IOException {
+  void beforeEach(TestInfo testInfo, MavenProjectResult result) throws GitAPIException {
     System.out.println("testInfo = " + testInfo);
     System.out.println("method = " + testInfo.getTestMethod());
     var method = testInfo.getTestMethod().orElseThrow(IllegalStateException::new);

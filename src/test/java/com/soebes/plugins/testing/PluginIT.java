@@ -1,6 +1,5 @@
 package com.soebes.plugins.testing;
 
-import com.soebes.itf.jupiter.extension.MavenDebug;
 import com.soebes.itf.jupiter.extension.MavenTest;
 import com.soebes.itf.jupiter.maven.MavenExecutionResult;
 
@@ -60,7 +59,6 @@ class PluginIT extends BaseIntegration {
 
   @MavenTest
   @GitRepo("maven-javadoc-plugin")
-  @MavenDebug
   void maven_javadoc_plugin(MavenExecutionResult result) {
     assertThat(result).isSuccessful();
   }

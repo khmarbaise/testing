@@ -62,7 +62,7 @@
     -->
     <trimStackTrace>false</trimStackTrace>
     <maven.plugin.tools>3.6.4</maven.plugin.tools>
-    <itf.version>0.12.0-SNAPSHOT</itf.version>
+    <itf.version>0.12.0</itf.version>
   </properties>
 
   <dependencyManagement>

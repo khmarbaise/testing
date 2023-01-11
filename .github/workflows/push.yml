@@ -15,11 +15,11 @@
 # specific language governing permissions and limitations
 # under the License.
 #
-name: SitePublishing
+name: build
 
 on:
   push:
-    branches: [ master ]
+    branches: '*'
 
 jobs:
   update-site:
